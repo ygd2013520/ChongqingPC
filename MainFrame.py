@@ -28,8 +28,8 @@ class MainFrame(wx.Frame):
         self.pingtaistatic = wx.StaticText(self.panel, -1,u'选择平台：',pos=(14,8),size=(75,30), style=0)
         self.pingtaiComboBox = wx.ComboBox(self.panel, -1, value =  u"链家", pos=(90, 5),size =(75,30),choices = m_pingtailist, style = wx.CB_READONLY)
         
-        self.pingtaistatic = wx.StaticText(self.panel, -1,u'选择区域：',pos=(14,38),size=(75,30), style=0)
-        self.pingtaiComboBox = wx.ComboBox(self.panel, -1, value =  u"江北区", pos=(90, 35),size =(75,30),choices = m_qulist, style = wx.CB_READONLY)
+        self.quyustatic = wx.StaticText(self.panel, -1,u'选择区域：',pos=(14,38),size=(75,30), style=0)
+        self.quyuComboBox = wx.ComboBox(self.panel, -1, value =  u"江北区", pos=(90, 35),size =(75,30),choices = m_qulist, style = wx.CB_READONLY)
         
 
         wx.StaticText(self.panel, -1,u'最小面积(㎡)：',pos=(180,8),size=(80,33), style=0)
@@ -112,8 +112,27 @@ class MainFrame(wx.Frame):
 
     #开始抓取数据
     def OnStartFun(self,event):
-        self.mtLogBox.AppendText("sline tettettatdtt\n")
         #获取界面设置的数据
-
-        g_fun = LjClassPC(1,2,3,4,5,6,7,self.mtLogBox)
-        g_fun.GetMessage()
+        pingtai = self.pingtaiComboBox.GetValue().strip()
+        quyu = self.quyuComboBox.GetValue().strip()
+        minsize = int(self.minsizeInput.GetValue().strip())
+        maxsize = int(self.maxsizeInput.GetValue().strip())
+        minprice = int(self.minpriceInput.GetValue().strip())
+        maxprice = int(self.maxpriceInput.GetValue().strip())
+        housenum = int(self.housenumInput.GetValue().strip())
+        xiaoqunum = int(self.xiaoqunumInput.GetValue().strip())
+        #参数异常判断
+        if  maxsize == 0 or maxprice == 0 \
+            or housenum == 0 or xiaoqunum == 0:
+            wx.MessageBox("参数设置错误，请重新设置正确参数！！！", "错误信息")
+            return
+        #根据平台调用相应的类函数
+        if pingtai == "链家":
+            ljclass = LjClassPC(quyu,minsize,maxsize,minprice,maxprice,housenum,xiaoqunum,self.mtLogBox)
+            getljdata = ljclass.GetMessage()
+        elif pingtai == "58同城":
+            pass
+        elif pingtai == "贝壳网":
+            pass
+        elif pingtai == "安居客":
+            pass
