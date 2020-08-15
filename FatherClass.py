@@ -12,6 +12,11 @@ class FatherClassPC():
         self.housenum = housenum
         self.xiaoqunum = xiaoqunum
         self.mtLogBox = mtLogBox
+        self.allXiaoquID_Quyu = []
     
-    def GetMessage(self):
+    def GetAllXioayuID_Quyu(self):
+        pass
+    def GetAll_Houses(self):
+        pass
+    def GetXiaoqu_Houses(self,idname):
         pass

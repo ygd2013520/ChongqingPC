@@ -1,7 +1,7 @@
 #coding=utf-8
 import wx
 import os
-
+import _thread
 import wx.lib.buttons as buttons
 
 from publicinfo import *
@@ -110,8 +110,10 @@ class MainFrame(wx.Frame):
         dlg.Destroy()
         return path
 
-    #开始抓取数据
     def OnStartFun(self,event):
+        _thread.start_new_thread(self.OnStartFunThread,(0,))
+    #开始抓取数据
+    def OnStartFunThread(self,event):
         #获取界面设置的数据
         pingtai = self.pingtaiComboBox.GetValue().strip()
         quyu = self.quyuComboBox.GetValue().strip()
@@ -121,15 +123,22 @@ class MainFrame(wx.Frame):
         maxprice = int(self.maxpriceInput.GetValue().strip())
         housenum = int(self.housenumInput.GetValue().strip())
         xiaoqunum = int(self.xiaoqunumInput.GetValue().strip())
+        path = self.FilePath.GetValue().strip()
         #参数异常判断
         if  maxsize == 0 or maxprice == 0 \
-            or housenum == 0 or xiaoqunum == 0:
+            or housenum == 0 or xiaoqunum == 0 \
+            or path == "":
             wx.MessageBox("参数设置错误，请重新设置正确参数！！！", "错误信息")
             return
         #根据平台调用相应的类函数
         if pingtai == "链家":
+            path = path + "/" + pingtai + quyu + ".xls"
             ljclass = LjClassPC(quyu,minsize,maxsize,minprice,maxprice,housenum,xiaoqunum,self.mtLogBox)
-            getljdata = ljclass.GetMessage()
+            ljclass.GetAllXioayuID_Quyu()
+            allhouseslist = ljclass.GetAll_Houses()
+            self.mtLogBox.AppendText("正在保存数据到文件：%s当中。。。\n" % path)
+            WriteDataToExcel(path,allhouseslist)
+            self.mtLogBox.AppendText("保存数据完成，整个过程已经全部完成！！！\n")
         elif pingtai == "58同城":
             pass
         elif pingtai == "贝壳网":
