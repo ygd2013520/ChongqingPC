@@ -34,7 +34,7 @@ class LjClassPC(FatherClassPC):
         #根据区域获取小区ID和名称
         pagenum = 0
         f = requests.get(url,timeout = 15,headers=self.headers)
-        self.mtLogBox.AppendText("正在抓取第1页的所有小区ID，请等待。。。\n")
+        self.mtLogBox.AppendText("正在抓取%s第1页的所有小区ID，请等待。。。\n" % (self.quyu))
         soup = BeautifulSoup(f.content,"lxml")
         for i in soup.find_all("div",class_='leftContent'):
             for j1 in i.find_all("div",class_="contentBottom clear"):
@@ -57,10 +57,10 @@ class LjClassPC(FatherClassPC):
                     self.allXiaoquID_Quyu.append(idname)
                     #break
         #根据页数获取所以小区ID名称
-        if pagenum > 0:
+        if pagenum > 1:
             for num in range(2,pagenum+1):
                 newurl = url + "pg%d/" % num
-                self.mtLogBox.AppendText("正在抓取第%d页的所有小区ID，%s区共%d页，请等待。。。\n" % (num,self.quyu,pagenum))
+                self.mtLogBox.AppendText("正在抓取%s区第%d页的所有小区ID，共%d页，请等待。。。\n" % (self.quyu,num,pagenum))
                 f = requests.get(newurl,timeout = 15,headers=self.headers)
                 soup = BeautifulSoup(f.content,"lxml")
                 for i in soup.find_all("div",class_='leftContent'):
@@ -89,21 +89,33 @@ class LjClassPC(FatherClassPC):
                 continue
             gethousesnew = {"maxchajia":gethouses[0]["chajia"],"houses":gethouses}
             allgethouses.append(gethousesnew)
+        #排序
         allgethouses.sort(key=lambda stu: stu["maxchajia"],reverse=True)
         allgethouses = allgethouses[0:self.xiaoqunum:1]
         for i in range(len(allgethouses)):
             for j in range(len(allgethouses[i]["houses"])):
                 allgethousesnew.append(allgethouses[i]["houses"][j])
+        self.mtLogBox.AppendText("%s区所有小区数据抓取完成！！！\n" % self.quyu)
         return allgethousesnew
             
 
     def GetXiaoqu_Houses(self,idname):
+        pagenum = 0
         houselist = []
         urlxiaoqu = "https://cq.lianjia.com/ershoufang/c%s/" % idname["id"]
-        self.mtLogBox.AppendText("正在抓取%s区小区：%s的数据，请等待。。。\n" % (self.quyu,idname["name"]))
+        self.mtLogBox.AppendText("正在抓取%s区小区：%s的第1页数据，请等待。。。\n" % (self.quyu,idname["name"]))
         f = requests.get(urlxiaoqu,timeout = 15,headers=self.headers)
         soup = BeautifulSoup(f.content,"lxml")
         for i in soup.find_all("div",class_='leftContent'):
+            for j3 in i.find_all("div",class_="resultDes clear"):
+                n = j3.find("h2",{"class":"total fl"}).find("span").text.strip()
+                if int(n) == 0:
+                    return houselist
+            for j1 in i.find_all("div",class_="contentBottom clear"):
+                for j2 in j1.find_all("div",class_="page-box fr"):
+                    for j3 in j2.find_all("div",class_="page-box house-lst-page-box"):
+                        pagenum = int((j3.get("page-data").split(":")[1].split(",")[0].strip()))#获取一共多少页
+                        break
             for j in  i.find_all("ul",class_="sellListContent"):
                 for k in j.find_all("li",class_="clear LOGVIEWDATA LOGCLICKDATA"):
                     for l in k.find_all("div",class_="info clear"):
@@ -120,6 +132,7 @@ class LjClassPC(FatherClassPC):
                                 houseinfo["year"] = info[5].strip()
                                 houseinfo["banta"] = info[6].strip()
                                 houseinfo["name"] = idname["name"]
+                                houseinfo["junjia"] = idname["junjia"]
                                 break
                         for m in l.find_all("div",class_="priceInfo"):
                             totalPrice = m.find("div", {"class": "totalPrice"}).find("span").text.strip()
@@ -137,8 +150,50 @@ class LjClassPC(FatherClassPC):
                         if len(houselist) > self.housenum:
                             houselist.sort(key=lambda stu: stu["danjia"],reverse=True)
                             del houselist[0]
+        #根据页数获取每页小区信息
+        if pagenum > 1:
+            for num in range(2,pagenum+1):
+                urlxiaoqu = "https://cq.lianjia.com/ershoufang/pg%dc%s/" % (num,idname["id"])
+                self.mtLogBox.AppendText("正在抓取%s区小区：%s的第%d页数据，请等待。。。\n" % (self.quyu,idname["name"],num))
+                f = requests.get(urlxiaoqu,timeout = 15,headers=self.headers)
+                soup = BeautifulSoup(f.content,"lxml")
+                for i in soup.find_all("div",class_='leftContent'):
+                    for j in  i.find_all("ul",class_="sellListContent"):
+                        for k in j.find_all("li",class_="clear LOGVIEWDATA LOGCLICKDATA"):
+                            for l in k.find_all("div",class_="info clear"):
+                                houseinfo = {"chajia":0,"huxing":"","size":0,"turn":"","isjz":"","loucen":"","year":"","banta":"","allprice":0,"danjia":0}
+                                for m in l.find_all("div",class_="houseInfo"):
+                                    info = m.get_text()
+                                    info = info.split("|")
+                                    if len(info) == 7:
+                                        houseinfo["huxing"] = info[0].strip()
+                                        houseinfo["size"] = float(info[1].split("平米")[0].strip())
+                                        houseinfo["turn"] = info[2].strip()
+                                        houseinfo["isjz"] = info[3].strip()
+                                        houseinfo["loucen"] = info[4].strip()
+                                        houseinfo["year"] = info[5].strip()
+                                        houseinfo["banta"] = info[6].strip()
+                                        houseinfo["name"] = idname["name"]
+                                        houseinfo["junjia"] = idname["junjia"]
+                                        break
+                                for m in l.find_all("div",class_="priceInfo"):
+                                    totalPrice = m.find("div", {"class": "totalPrice"}).find("span").text.strip()
+                                    unitPrice = m.find("div", {"class": "unitPrice"}).find("span").text.strip()
+                                    unitPrice = unitPrice.split("单价")[1].split("元")[0]
+                                    houseinfo["allprice"] = float(totalPrice)
+                                    houseinfo["danjia"] = float(unitPrice)
+                                    houseinfo["chajia"] = idname["junjia"] - houseinfo["danjia"]
+                                    break
+                                if ((houseinfo["size"] < self.minsize) or (houseinfo["size"] > self.maxsize)):
+                                    continue
+                                if ((houseinfo["allprice"] < self.minprice) or (houseinfo["allprice"] > self.maxprice)):
+                                    continue
+                                houselist.append(houseinfo)
+                                if len(houselist) > self.housenum:
+                                    houselist.sort(key=lambda stu: stu["danjia"],reverse=True)
+                                    del houselist[0]
+            
         houselist.sort(key=lambda stu: stu["danjia"],reverse=False)
-        self.mtLogBox.AppendText("%s区所有小区数据抓取 完成！！！\n" % self.quyu)
         return houselist
 
         

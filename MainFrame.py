@@ -139,6 +139,7 @@ class MainFrame(wx.Frame):
             self.mtLogBox.AppendText("正在保存数据到文件：%s当中。。。\n" % path)
             WriteDataToExcel(path,allhouseslist)
             self.mtLogBox.AppendText("保存数据完成，整个过程已经全部完成！！！\n")
+            wx.MessageBox("%s的二手房数据抓取完成，以保存至目录%s！！！" % (quyu,path), "完成信息")
         elif pingtai == "58同城":
             pass
         elif pingtai == "贝壳网":
