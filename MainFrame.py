@@ -1,11 +1,12 @@
 #coding=utf-8
 import wx
-import os
+import os,time
 import _thread
 import wx.lib.buttons as buttons
 
 from publicinfo import *
 from LjClass import *
+from BkClass import *
 
 
 class MainFrame(wx.Frame):
@@ -69,15 +70,15 @@ class MainFrame(wx.Frame):
         self.GetFilePath = buttons.GenButton(self.panel, label=u"选择", pos=(420, 73), size=(50, 30))
 
         #开始按钮
-        self.begin_button = buttons.GenButton(self.panel,label=u"开始", pos=(475, 73), size=(50, 30))
+        self.begin_button = buttons.GenButton(self.panel,label=u"开始", pos=(495, 73), size=(50, 30))
         self.Bind(wx.EVT_BUTTON, self.OnStartFun, self.begin_button)
         self.begin_button.SetForegroundColour("blue")
 
-        self.stop_button =buttons.GenButton(self.panel,label=u"停止", pos=(530,73), size=(50, 30))
+        self.stop_button =buttons.GenButton(self.panel,label=u"保留", pos=(550,73), size=(50, 30))
         self.stop_button.SetForegroundColour("red")
 
         #创建清理按钮
-        self.btClear = buttons.GenButton(self.panel, label=u"清除日志", pos=(585, 73), size=(70, 30))
+        self.btClear = buttons.GenButton(self.panel, label=u"清除日志", pos=(605, 73), size=(70, 30))
         self.Bind(wx.EVT_BUTTON, self.OnClear, self.btClear)
         #创建显示日志框
         self.mtLogBox = wx.TextCtrl(self.panel, -1,"", pos=(2,105), size=(675, 455), style=wx.TE_MULTILINE|wx.HSCROLL|wx.TE_READONLY) 
@@ -111,6 +112,7 @@ class MainFrame(wx.Frame):
         return path
 
     def OnStartFun(self,event):
+        self.begin_button.Disable()
         _thread.start_new_thread(self.OnStartFunThread,(0,))
     #开始抓取数据
     def OnStartFunThread(self,event):
@@ -129,6 +131,7 @@ class MainFrame(wx.Frame):
             or housenum == 0 or xiaoqunum == 0 \
             or path == "":
             wx.MessageBox("参数设置错误，请重新设置正确参数！！！", "错误信息")
+            self.begin_button.Enable()
             return
         #根据平台调用相应的类函数
         if pingtai == "链家":
@@ -137,12 +140,20 @@ class MainFrame(wx.Frame):
             ljclass.GetAllXioayuID_Quyu()
             allhouseslist = ljclass.GetAll_Houses()
             self.mtLogBox.AppendText("正在保存数据到文件：%s当中。。。\n" % path)
-            WriteDataToExcel(path,allhouseslist)
+            ljclass.WriteDataToExcel(path,allhouseslist)
             self.mtLogBox.AppendText("保存数据完成，整个过程已经全部完成！！！\n")
             wx.MessageBox("%s的二手房数据抓取完成，以保存至目录%s！！！" % (quyu,path), "完成信息")
-        elif pingtai == "58同城":
-            pass
         elif pingtai == "贝壳网":
-            pass
+            path = path + "/" + pingtai + quyu + ".xls"
+            bkclass = BkClassPC(quyu,minsize,maxsize,minprice,maxprice,housenum,xiaoqunum,self.mtLogBox)
+            bkclass.GetAllXioayuID_Quyu()
+            allhouseslist = bkclass.GetAll_Houses()
+            self.mtLogBox.AppendText("正在保存数据到文件：%s当中。。。\n" % path)
+            bkclass.WriteDataToExcel(path,allhouseslist)
+            self.mtLogBox.AppendText("保存数据完成，整个过程已经全部完成！！！\n")
+            wx.MessageBox("%s的二手房数据抓取完成，以保存至目录%s！！！" % (quyu,path), "完成信息")
         elif pingtai == "安居客":
             pass
+        elif pingtai == "58同城":
+            pass
+        self.begin_button.Enable()
