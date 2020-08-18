@@ -43,7 +43,12 @@ class BkClassPC(FatherClassPC):
         #根据区域获取小区ID和名称
               #根据区域获取小区ID和名称
         pagenum = 0
-        f = requests.get(url,timeout = 15,headers=self.headers)
+        try:
+            f = requests.get(url,timeout = 15,headers=self.headers)
+        except Exception as e:
+            self.mtLogBox.AppendText("BkClassPC 1 requests.get error\n")
+            print(e)
+            return
         self.mtLogBox.AppendText("正在抓取%s第1页的所有小区ID，请等待。。。\n" % (self.quyu))
         soup = BeautifulSoup(f.content,"lxml")
         for i in soup.find_all("div",class_='leftContent'):
@@ -71,7 +76,12 @@ class BkClassPC(FatherClassPC):
             for num in range(2,pagenum+1):
                 newurl = url + "pg%d/" % num
                 self.mtLogBox.AppendText("正在抓取%s第%d页的所有小区ID，共%d页，请等待。。。\n" % (self.quyu,num,pagenum))
-                f = requests.get(newurl,timeout = 15,headers=self.headers)
+                try:
+                    f = requests.get(newurl,timeout = 15,headers=self.headers)
+                except Exception as e:
+                    self.mtLogBox.AppendText("BkClassPC 2 requests.get error\n")
+                    print(e)
+                    continue
                 soup = BeautifulSoup(f.content,"lxml")
                 for i in soup.find_all("div",class_='leftContent'):
                     for j in i.find_all("ul",class_="listContent"):
@@ -114,7 +124,12 @@ class BkClassPC(FatherClassPC):
         houselist = []
         urlxiaoqu = "https://cq.ke.com/ershoufang/c%s/" % idname["id"]
         self.mtLogBox.AppendText("正在抓取%s小区：%s的第1页数据，请等待。。。\n" % (self.quyu,idname["name"]))
-        f = requests.get(urlxiaoqu,timeout = 15,headers=self.headers)
+        try:
+            f = requests.get(urlxiaoqu,timeout = 15,headers=self.headers)
+        except Exception as e:
+            self.mtLogBox.AppendText("GetXiaoqu_Houses 1 requests.get error\n")
+            print(e)
+            return houselist
         soup = BeautifulSoup(f.content,"lxml")
         for i in soup.find_all("div",class_='leftContent'):
             for j3 in i.find_all("div",class_="resultDes clear"):
@@ -165,7 +180,12 @@ class BkClassPC(FatherClassPC):
             for num in range(2,pagenum+1):
                 urlxiaoqu = "https://cq.ke.com/ershoufang/pg%dc%s/" % (num,idname["id"])
                 self.mtLogBox.AppendText("正在抓取%s小区：%s的第%d页数据，请等待。。。\n" % (self.quyu,idname["name"],num))
-                f = requests.get(urlxiaoqu,timeout = 15,headers=self.headers)
+                try:
+                    f = requests.get(urlxiaoqu,timeout = 15,headers=self.headers)
+                except Exception as e:
+                    self.mtLogBox.AppendText("GetXiaoqu_Houses 2 requests.get error\n")
+                    print(e)
+                    continue
                 soup = BeautifulSoup(f.content,"lxml")
                 for i in soup.find_all("div",class_='leftContent'):
                     for j in  i.find_all("ul",class_="sellListContent"):
