@@ -171,10 +171,13 @@ class LjClassPC(FatherClassPC):
                             continue
                         if ((houseinfo["allprice"] < self.minprice) or (houseinfo["allprice"] > self.maxprice)):
                             continue
+                        if houseinfo in houselist:
+                            continue
                         houselist.append(houseinfo)
                         if len(houselist) > self.housenum:
                             houselist.sort(key=lambda stu: stu["danjia"],reverse=True)
                             del houselist[0]
+                    break
         #根据页数获取每页小区信息
         if pagenum > 1:
             for num in range(2,pagenum+1):
@@ -218,11 +221,13 @@ class LjClassPC(FatherClassPC):
                                     continue
                                 if ((houseinfo["allprice"] < self.minprice) or (houseinfo["allprice"] > self.maxprice)):
                                     continue
+                                if houseinfo in houselist:
+                                    continue
                                 houselist.append(houseinfo)
                                 if len(houselist) > self.housenum:
                                     houselist.sort(key=lambda stu: stu["danjia"],reverse=True)
                                     del houselist[0]
-            
+                            break
         houselist.sort(key=lambda stu: stu["danjia"],reverse=False)
         return houselist
 

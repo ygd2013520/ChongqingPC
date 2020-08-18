@@ -104,6 +104,7 @@ class BkClassPC(FatherClassPC):
         allgethousesnew = []
         for i in range(len(self.allXiaoquID_Quyu)):
             gethouses = self.GetXiaoqu_Houses(self.allXiaoquID_Quyu[i])
+            print(len(gethouses))
             if len(gethouses) == 0:
                 continue
             gethousesnew = {"maxchajia":gethouses[0]["chajia"],"houses":gethouses}
@@ -134,6 +135,7 @@ class BkClassPC(FatherClassPC):
         for i in soup.find_all("div",class_='leftContent'):
             for j3 in i.find_all("div",class_="resultDes clear"):
                 n = j3.find("h2",{"class":"total fl"}).find("span").text.strip()
+                print(n)
                 if int(n) == 0:
                     return houselist
             for j1 in i.find_all("div",class_="contentBottom clear"):
@@ -171,10 +173,13 @@ class BkClassPC(FatherClassPC):
                             continue
                         if ((houseinfo["allprice"] < self.minprice) or (houseinfo["allprice"] > self.maxprice)):
                             continue
+                        if houseinfo in houselist:
+                            continue
                         houselist.append(houseinfo)
                         if len(houselist) > self.housenum:
                             houselist.sort(key=lambda stu: stu["danjia"],reverse=True)
                             del houselist[0]
+                    break
         #根据页数获取每页小区信息
         if pagenum > 1:
             for num in range(2,pagenum+1):
@@ -218,9 +223,12 @@ class BkClassPC(FatherClassPC):
                                     continue
                                 if ((houseinfo["allprice"] < self.minprice) or (houseinfo["allprice"] > self.maxprice)):
                                     continue
+                                if houseinfo in houselist:
+                                    continue
                                 houselist.append(houseinfo)
                                 if len(houselist) > self.housenum:
                                     houselist.sort(key=lambda stu: stu["danjia"],reverse=True)
                                     del houselist[0]
+                            break
         houselist.sort(key=lambda stu: stu["danjia"],reverse=False)
         return houselist

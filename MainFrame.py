@@ -142,7 +142,7 @@ class MainFrame(wx.Frame):
             self.mtLogBox.AppendText("正在保存数据到文件：%s当中。。。\n" % path)
             ljclass.WriteDataToExcel(path,allhouseslist)
             self.mtLogBox.AppendText("保存数据完成，整个过程已经全部完成！！！\n")
-            wx.MessageBox("%s的二手房数据抓取完成，以保存至目录%s！！！" % (quyu,path), "完成信息")
+            wx.MessageBox("%s的二手房数据抓取完成，已经保存至目录%s！！！" % (quyu,path), "完成信息")
         elif pingtai == "贝壳网":
             path = path + "/" + pingtai + quyu + ".xls"
             bkclass = BkClassPC(quyu,minsize,maxsize,minprice,maxprice,housenum,xiaoqunum,self.mtLogBox)
@@ -151,7 +151,7 @@ class MainFrame(wx.Frame):
             self.mtLogBox.AppendText("正在保存数据到文件：%s当中。。。\n" % path)
             bkclass.WriteDataToExcel(path,allhouseslist)
             self.mtLogBox.AppendText("保存数据完成，整个过程已经全部完成！！！\n")
-            wx.MessageBox("%s的二手房数据抓取完成，以保存至目录%s！！！" % (quyu,path), "完成信息")
+            wx.MessageBox("%s的二手房数据抓取完成，已经保存至目录%s！！！" % (quyu,path), "完成信息")
         elif pingtai == "安居客":
             pass
         elif pingtai == "58同城":
