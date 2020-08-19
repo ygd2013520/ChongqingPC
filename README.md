@@ -7,3 +7,7 @@
 ```
 pip install wxpython -i http://mirrors.aliyun.com/pypi/simple --trusted-host mirrors.aliyun.com
 ```
+### 5、使用以下命令打包程序成exe可执行程序
+```
+pyinstaller -i Search.ico -w -F main.py
+```
