@@ -23,6 +23,9 @@ class FatherClassPC():
         pass
     def GetXiaoqu_Houses(self,idname):
         pass
+    #判断是否为住宅
+    def iszhuzhai(self,url):
+        pass
     def WriteDataToExcel(self,filepath, listdata = []):
         if len(listdata) == 0:
             return

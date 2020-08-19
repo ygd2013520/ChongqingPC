@@ -143,8 +143,11 @@ class LjClassPC(FatherClassPC):
                         break
             for j in  i.find_all("ul",class_="sellListContent"):
                 for k in j.find_all("li",class_="clear LOGVIEWDATA LOGCLICKDATA"):
+                    u = k.find("a",{"class":"noresultRecommend img LOGCLICKDATA"}).get("href")
+                    if self.iszhuzhai(u) == False:
+                        continue
                     for l in k.find_all("div",class_="info clear"):
-                        houseinfo = {"chajia":0,"huxing":"","size":0,"turn":"","isjz":"","loucen":"","year":"","banta":"","allprice":0,"danjia":0}
+                        houseinfo = {"name":"","huxing":"","size":0,"turn":"","isjz":"","loucen":"","year":"","banta":"","allprice":0,"danjia":0,"junjia":0,"chajia":0}
                         for m in l.find_all("div",class_="houseInfo"):
                             info = m.get_text()
                             info = info.split("|")
@@ -177,7 +180,7 @@ class LjClassPC(FatherClassPC):
                         if len(houselist) > self.housenum:
                             houselist.sort(key=lambda stu: stu["danjia"],reverse=True)
                             del houselist[0]
-                    break
+                    #break
         #根据页数获取每页小区信息
         if pagenum > 1:
             for num in range(2,pagenum+1):
@@ -193,8 +196,11 @@ class LjClassPC(FatherClassPC):
                 for i in soup.find_all("div",class_='leftContent'):
                     for j in  i.find_all("ul",class_="sellListContent"):
                         for k in j.find_all("li",class_="clear LOGVIEWDATA LOGCLICKDATA"):
+                            u = k.find("a",{"class":"noresultRecommend img LOGCLICKDATA"}).get("href")
+                            if self.iszhuzhai(u) == False:
+                                continue
                             for l in k.find_all("div",class_="info clear"):
-                                houseinfo = {"chajia":0,"huxing":"","size":0,"turn":"","isjz":"","loucen":"","year":"","banta":"","allprice":0,"danjia":0}
+                                houseinfo = {"name":"","huxing":"","size":0,"turn":"","isjz":"","loucen":"","year":"","banta":"","allprice":0,"danjia":0,"junjia":0,"chajia":0}
                                 for m in l.find_all("div",class_="houseInfo"):
                                     info = m.get_text()
                                     info = info.split("|")
@@ -227,10 +233,27 @@ class LjClassPC(FatherClassPC):
                                 if len(houselist) > self.housenum:
                                     houselist.sort(key=lambda stu: stu["danjia"],reverse=True)
                                     del houselist[0]
-                            break
+                            #break
         houselist.sort(key=lambda stu: stu["danjia"],reverse=False)
         return houselist
-
+    
+    #判断是否为住宅
+    def iszhuzhai(self,url):
+        try:
+            f = requests.get(url,timeout = 15,headers=self.headers)
+        except Exception as e:
+            self.mtLogBox.AppendText("GetXiaoqu_Houses 3 requests.get error\n")
+            print(e)
+            return False
+        soup = BeautifulSoup(f.content,"lxml")
+        for i in soup.find_all("div",class_='box-l'):
+            for j in i.find_all("div",class_="transaction"):
+                mem = j.find("div",{"class":"content"}).get_text().strip()
+                if "普通住宅" in mem:
+                    return True
+                else:
+                    return False
+            
         
         
                         
