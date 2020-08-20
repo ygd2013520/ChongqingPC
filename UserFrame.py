@@ -1,7 +1,7 @@
 #coding=utf-8
 import wx
 import os
-import win32com.client
+import win32com.client 
 
 class UserFrame(wx.Frame):
     def __init__(self, parent=None, id=-1, UpdateUI=None):
@@ -26,7 +26,7 @@ class UserFrame(wx.Frame):
         self.passwordInput.SetFont(self.font)
 
         #确认按钮
-        self.login_button = wx.Button(self.panel,label=u"确认", pos=(150, 90), size=(105, 28))
+        self.login_button = wx.Button(self.panel,label=u"登陆", pos=(150, 90), size=(105, 28))
 
         self.Bind(wx.EVT_BUTTON, self.loginSys, self.login_button)
 

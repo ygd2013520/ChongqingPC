@@ -123,7 +123,7 @@ class BkClassPC(FatherClassPC):
     def GetXiaoqu_Houses(self,idname):
         pagenum = 0
         houselist = []
-        urlxiaoqu = "https://cq.ke.com/ershoufang/c%s/" % idname["id"]
+        urlxiaoqu = "https://cq.ke.com/ershoufang/ie2sf1c%s/" % idname["id"]
         self.mtLogBox.AppendText("正在抓取%s小区：%s的第1页数据，请等待。。。\n" % (self.quyu,idname["name"]))
         try:
             f = requests.get(urlxiaoqu,timeout = 15,headers=self.headers)
@@ -135,7 +135,6 @@ class BkClassPC(FatherClassPC):
         for i in soup.find_all("div",class_='leftContent'):
             for j3 in i.find_all("div",class_="resultDes clear"):
                 n = j3.find("h2",{"class":"total fl"}).find("span").text.strip()
-                print(n)
                 if int(n) == 0:
                     return houselist
             for j1 in i.find_all("div",class_="contentBottom clear"):
@@ -145,9 +144,9 @@ class BkClassPC(FatherClassPC):
                         break
             for j in  i.find_all("ul",class_="sellListContent"):
                 for k in j.find_all("li",class_="clear"):
-                    u = k.find("a",{"class":"VIEWDATA CLICKDATA maidian-detail"}).get("href")
-                    if self.iszhuzhai(u) == False:
-                        continue
+                    # u = k.find("a",{"class":"VIEWDATA CLICKDATA maidian-detail"}).get("href")
+                    # if self.iszhuzhai(u) == False:
+                    #     continue
                     for l in k.find_all("div",class_="info clear"):
                         houseinfo = {"name":"","huxing":"","size":0,"turn":"","isjz":"","loucen":"","year":"","banta":"","allprice":0,"danjia":0,"junjia":0,"chajia":0}
                         for m in l.find_all("div",class_="houseInfo"):
@@ -186,7 +185,7 @@ class BkClassPC(FatherClassPC):
         #根据页数获取每页小区信息
         if pagenum > 1:
             for num in range(2,pagenum+1):
-                urlxiaoqu = "https://cq.ke.com/ershoufang/pg%dc%s/" % (num,idname["id"])
+                urlxiaoqu = "https://cq.ke.com/ershoufang/pg%die2sf1c%s/" % (num,idname["id"])
                 self.mtLogBox.AppendText("正在抓取%s小区：%s的第%d页数据，请等待。。。\n" % (self.quyu,idname["name"],num))
                 try:
                     f = requests.get(urlxiaoqu,timeout = 15,headers=self.headers)
@@ -198,9 +197,9 @@ class BkClassPC(FatherClassPC):
                 for i in soup.find_all("div",class_='leftContent'):
                     for j in  i.find_all("ul",class_="sellListContent"):
                         for k in j.find_all("li",class_="clear"):
-                            u = k.find("a",{"class":"VIEWDATA CLICKDATA maidian-detail"}).get("href")
-                            if self.iszhuzhai(u) == False:
-                                continue
+                            # u = k.find("a",{"class":"VIEWDATA CLICKDATA maidian-detail"}).get("href")
+                            # if self.iszhuzhai(u) == False:
+                            #     continue
                             for l in k.find_all("div",class_="info clear"):
                                 houseinfo = {"name":"","huxing":"","size":0,"turn":"","isjz":"","loucen":"","year":"","banta":"","allprice":0,"danjia":0,"junjia":0,"chajia":0}
                                 for m in l.find_all("div",class_="houseInfo"):
@@ -238,7 +237,7 @@ class BkClassPC(FatherClassPC):
                             #break
         houselist.sort(key=lambda stu: stu["danjia"],reverse=False)
         return houselist
-    #判断是否为住宅
+    #判断是否为住宅，暂时为使用该函数
     def iszhuzhai(self,url):
         try:
             f = requests.get(url,timeout = 15,headers=self.headers)
