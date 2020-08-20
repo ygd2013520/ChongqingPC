@@ -49,7 +49,8 @@ class BkClassPC(FatherClassPC):
             self.mtLogBox.AppendText("BkClassPC 1 requests.get error\n")
             print(e)
             return
-        self.mtLogBox.AppendText("正在抓取%s第1页的所有小区ID，请等待。。。\n" % (self.quyu))
+        self.begintime = datetime.datetime.now().replace(microsecond=0)
+        self.mtLogBox.AppendText("正在抓取%s第1页的所有小区ID，请等待。。。耗时:%s\n" % (self.quyu,datetime.datetime.now().replace(microsecond=0) - self.begintime))
         soup = BeautifulSoup(f.content,"lxml")
         for i in soup.find_all("div",class_='leftContent'):
             for j1 in i.find_all("div",class_="contentBottom clear"):
@@ -75,7 +76,7 @@ class BkClassPC(FatherClassPC):
         if pagenum > 1:
             for num in range(2,pagenum+1):
                 newurl = url + "pg%d/" % num
-                self.mtLogBox.AppendText("正在抓取%s第%d页的所有小区ID，共%d页，请等待。。。\n" % (self.quyu,num,pagenum))
+                self.mtLogBox.AppendText("正在抓取%s区第%d页的所有小区ID，共%d页，请等待。。。耗时:%s\n" % (self.quyu,num,pagenum,datetime.datetime.now().replace(microsecond=0) - self.begintime))
                 try:
                     f = requests.get(newurl,timeout = 15,headers=self.headers)
                 except Exception as e:
@@ -102,9 +103,10 @@ class BkClassPC(FatherClassPC):
     def GetAll_Houses(self):
         allgethouses = []
         allgethousesnew = []
-        for i in range(len(self.allXiaoquID_Quyu)):
+        alllen = len(self.allXiaoquID_Quyu)
+        for i in range(alllen):
+            self.mtLogBox.AppendText("正在抓取%s 第 %d/%d小区数据，请等待。。。耗时:%s\n" % (self.quyu,i+1,alllen,datetime.datetime.now().replace(microsecond=0) - self.begintime))
             gethouses = self.GetXiaoqu_Houses(self.allXiaoquID_Quyu[i])
-            print(len(gethouses))
             if len(gethouses) == 0:
                 continue
             gethousesnew = {"maxchajia":gethouses[0]["chajia"],"houses":gethouses}
@@ -124,7 +126,7 @@ class BkClassPC(FatherClassPC):
         pagenum = 0
         houselist = []
         urlxiaoqu = "https://cq.ke.com/ershoufang/ie2sf1c%s/" % idname["id"]
-        self.mtLogBox.AppendText("正在抓取%s小区：%s的第1页数据，请等待。。。\n" % (self.quyu,idname["name"]))
+        self.mtLogBox.AppendText("正在抓取%s区小区：%s的第1页数据，请等待。。。耗时:%s\n" % (self.quyu,idname["name"],datetime.datetime.now().replace(microsecond=0) - self.begintime))
         try:
             f = requests.get(urlxiaoqu,timeout = 15,headers=self.headers)
         except Exception as e:
@@ -186,7 +188,7 @@ class BkClassPC(FatherClassPC):
         if pagenum > 1:
             for num in range(2,pagenum+1):
                 urlxiaoqu = "https://cq.ke.com/ershoufang/pg%die2sf1c%s/" % (num,idname["id"])
-                self.mtLogBox.AppendText("正在抓取%s小区：%s的第%d页数据，请等待。。。\n" % (self.quyu,idname["name"],num))
+                self.mtLogBox.AppendText("正在抓取%s区小区：%s的第%d页数据，请等待。。。耗时:%s\n" % (self.quyu,idname["name"],num,datetime.datetime.now().replace(microsecond=0) - self.begintime))
                 try:
                     f = requests.get(urlxiaoqu,timeout = 15,headers=self.headers)
                 except Exception as e:

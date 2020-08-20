@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 #父类
 import xlwt
+import datetime
 dictinfo = {"chajia":"差价(元)","huxing":"户型","size":"大小(平米)","turn":"朝向","isjz":"是否精装","junjia":"均价(元)",\
     "loucen":"楼层","year":"年代","banta":"板塔","allprice":"总价(万)","danjia":"单价(元)","name":"小区名字"}
 
@@ -16,6 +17,7 @@ class FatherClassPC():
         self.xiaoqunum = xiaoqunum
         self.mtLogBox = mtLogBox
         self.allXiaoquID_Quyu = []
+        self.begintime = None
     
     def GetAllXioayuID_Quyu(self):
         pass
