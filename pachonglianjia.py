@@ -20,6 +20,16 @@ def GetallxiaoquID(url):
 
 
 #GetallxiaoquID(urljiangbei)
+import datetime
+import time
+starttime = datetime.datetime.now().replace(microsecond=0)
+time.sleep(1)
+endtime = datetime.datetime.now().replace(microsecond=0)
+tt = endtime-starttime
+
+print("time:%s" % tt)
+print(tt.seconds)
+exit()
 
 listtest = [{"num":12-30,"name":"kkk"},{"num":2,"name":"kkk"},{"num":15,"name":"kkk"},{"num":20,"name":"kkk"}]
 print(listtest)
@@ -31,24 +41,7 @@ print(listtest)
 listnew = [{'chajia': 386.0, 'huxing': '3室2厅', 'size': 78.0, 'turn': '南', 'isjz': '简装', 'loucen': '中楼层(共10层)', 'year': '2000年建', 'banta': '塔楼', 'allprice': 76.5, 'danjia': 9808.0},\
 	 		{'chajia': 194.0, 'huxing': '2室1厅', 'size': 78.0, 'turn': '东南', 'isjz': '其他', 'loucen': '中楼层(共8层)', 'year': '2000年建', 'banta': '塔楼', 'allprice': 78.0, 'danjia': 10000.0},\
 			{'chajia': 106.0, 'huxing': '2室1厅', 'size': 69.39, 'turn': '南', 'isjz': '简装', 'loucen': '中楼层(共8层)', 'year':'2000年建', 'banta': '塔楼', 'allprice': 70.0, 'danjia': 10088.0}]
-import xlwt 
 
-#将list中的内容写入一个新的file文件
-def testXlwt(file = 'new.xls', list = []):
-	
-	book = xlwt.Workbook() #创建一个Excel
-	sheet1 = book.add_sheet('hello') #在其中创建一个名为hello的sheet
-	i = 0 #行序号
-	for app in list : #遍历list每一行
-		j = 0 #列序号
-		for x in app : #遍历该行中的每个内容（也就是每一列的）
-			sheet1.write(i, j, app[x]) #在新sheet中的第i行第j列写入读取到的x值
-			j = j+1 #列号递增
-		i = i+1 #行号递增
-	# sheet1.write(0,0,'cloudox') #往sheet里第一行第一列写一个数据
-	# sheet1.write(1,0,'ox') #往sheet里第二行第一列写一个数据
-	book.save(file) #创建保存文件
-testXlwt("new.xls",listnew)
 
 # item.contents[1].find("a").text):
 # name = item.contents[1].find("a").text
