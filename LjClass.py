@@ -13,6 +13,7 @@ urlyubei = "https://cq.lianjia.com/xiaoqu/yubei/"       #渝北区小区url
 urljiulongpo = "https://cq.lianjia.com/xiaoqu/jiulongpo/"       #九龙坡区url
 urldadukou = "https://cq.lianjia.com/xiaoqu/dadukou/"     #大渡口区小区url
 urlshapingba = "https://cq.lianjia.com/xiaoqu/shapingba/"   #沙坪坝区小区url
+urlbeibei = "https://cq.lianjia.com/xiaoqu/beibei/"         #北碚区小区url
 
 from bs4 import BeautifulSoup
 from lxml import html
@@ -40,7 +41,7 @@ class LjClassPC(FatherClassPC):
         elif self.quyu == "沙坪坝":
             url = urlshapingba
         else:
-            url = ""
+            url = urlbeibei
         #根据区域获取小区ID和名称
         pagenum = 0
         try:
@@ -169,23 +170,28 @@ class LjClassPC(FatherClassPC):
                                 houseinfo["name"] = idname["name"]
                                 houseinfo["junjia"] = idname["junjia"]
                                 break
+                        if houseinfo["size"] == 0:
+                            continue
                         for m in l.find_all("div",class_="priceInfo"):
                             totalPrice = m.find("div", {"class": "totalPrice"}).find("span").text.strip()
                             unitPrice = m.find("div", {"class": "unitPrice"}).find("span").text.strip()
                             unitPrice = unitPrice.split("单价")[1].split("元")[0]
                             houseinfo["allprice"] = float(totalPrice)
                             houseinfo["danjia"] = float(unitPrice)
-                            houseinfo["chajia"] = idname["junjia"] - houseinfo["danjia"]
+                            #houseinfo["chajia"] = idname["junjia"] - houseinfo["danjia"]
+                            houseinfo["chajia"] = houseinfo["size"] - houseinfo["allprice"]
                             break
                         if ((houseinfo["size"] < self.minsize) or (houseinfo["size"] > self.maxsize)):
                             continue
                         if ((houseinfo["allprice"] < self.minprice) or (houseinfo["allprice"] > self.maxprice)):
                             continue
+                        if (float(houseinfo["year"].split("年")[0]) <= 2004):
+                            continue
                         if houseinfo in houselist:
                             continue
                         houselist.append(houseinfo)
                         if len(houselist) > self.housenum:
-                            houselist.sort(key=lambda stu: stu["danjia"],reverse=True)
+                            houselist.sort(key=lambda stu: stu["chajia"],reverse=False)
                             del houselist[0]
                     #break
         #根据页数获取每页小区信息
@@ -222,6 +228,8 @@ class LjClassPC(FatherClassPC):
                                         houseinfo["name"] = idname["name"]
                                         houseinfo["junjia"] = idname["junjia"]
                                         break
+                                if houseinfo["size"] == 0:
+                                    continue
                                 for m in l.find_all("div",class_="priceInfo"):
                                     totalPrice = m.find("div", {"class": "totalPrice"}).find("span").text.strip()
                                     unitPrice = m.find("div", {"class": "unitPrice"}).find("span").text.strip()
@@ -229,19 +237,23 @@ class LjClassPC(FatherClassPC):
                                     houseinfo["allprice"] = float(totalPrice)
                                     houseinfo["danjia"] = float(unitPrice)
                                     houseinfo["chajia"] = idname["junjia"] - houseinfo["danjia"]
+                                    #houseinfo["chajia"] = idname["junjia"] - houseinfo["danjia"]
+                                    houseinfo["chajia"] = houseinfo["size"] - houseinfo["allprice"]
                                     break
                                 if ((houseinfo["size"] < self.minsize) or (houseinfo["size"] > self.maxsize)):
                                     continue
                                 if ((houseinfo["allprice"] < self.minprice) or (houseinfo["allprice"] > self.maxprice)):
                                     continue
+                                if (float(houseinfo["year"].split("年")[0]) <= 2004):
+                                    continue
                                 if houseinfo in houselist:
                                     continue
                                 houselist.append(houseinfo)
                                 if len(houselist) > self.housenum:
-                                    houselist.sort(key=lambda stu: stu["danjia"],reverse=True)
+                                    houselist.sort(key=lambda stu: stu["chajia"],reverse=False)
                                     del houselist[0]
                             #break
-        houselist.sort(key=lambda stu: stu["danjia"],reverse=False)
+        houselist.sort(key=lambda stu: stu["chajia"],reverse=True)
         return houselist
     
     #判断是否为住宅，暂时为使用该函数
