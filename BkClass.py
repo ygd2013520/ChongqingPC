@@ -166,6 +166,8 @@ class BkClassPC(FatherClassPC):
                                 houseinfo["name"] = idname["name"]
                                 houseinfo["junjia"] = idname["junjia"]
                                 break
+                        if houseinfo["size"] == 0:
+                            continue
                         for m in l.find_all("div",class_="priceInfo"):
                             totalPrice = m.find("div", {"class": "totalPrice"}).find("span").text.strip()
                             unitPrice = m.find("div", {"class": "unitPrice"}).find("span").text.strip()
@@ -219,6 +221,8 @@ class BkClassPC(FatherClassPC):
                                         houseinfo["name"] = idname["name"]
                                         houseinfo["junjia"] = idname["junjia"]
                                         break
+                                if houseinfo["size"] == 0:
+                                    continue
                                 for m in l.find_all("div",class_="priceInfo"):
                                     totalPrice = m.find("div", {"class": "totalPrice"}).find("span").text.strip()
                                     unitPrice = m.find("div", {"class": "unitPrice"}).find("span").text.strip()
