@@ -9,5 +9,5 @@ pip install wxpython -i http://mirrors.aliyun.com/pypi/simple --trusted-host mir
 ```
 ### 5、使用以下命令打包程序成exe可执行程序
 ```
-pyinstaller -i Search.ico -w -F main_m.py
+pyinstaller -i Search.ico -w -F main_b1.py
 ```
