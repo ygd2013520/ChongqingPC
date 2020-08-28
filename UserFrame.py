@@ -12,7 +12,7 @@ class UserFrame(wx.Frame):
            
     def InitUI(self):
         #判断程序是否运行
-        if self.proc_exist("main.exe"):
+        if self.proc_exist("main_m.exe"):
             wx.MessageBox(u"程序已经运行，不能再次运行！",u"运行警告",wx.OK|wx.ICON_INFORMATION)
             wx.Exit()
         #创建panel
