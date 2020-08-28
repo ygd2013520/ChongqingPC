@@ -11,7 +11,7 @@ from BkClass import *
 
 class MainFrame(wx.Frame):
     def __init__(self,parent=None,id=-1,UpdateUI=None):
-        wx.Frame.__init__(self, parent, id, title=u'控制主界面', size=(695, 600), pos=wx.DefaultPosition,style=wx.MINIMIZE_BOX | wx.SIMPLE_BORDER | wx.SYSTEM_MENU | wx.CAPTION | wx.CLOSE_BOX | wx.CLIP_CHILDREN )
+        wx.Frame.__init__(self, parent, id, title=u'单价均价差值版本(V1.01)', size=(695, 600), pos=wx.DefaultPosition,style=wx.MINIMIZE_BOX | wx.SIMPLE_BORDER | wx.SYSTEM_MENU | wx.CAPTION | wx.CLOSE_BOX | wx.CLIP_CHILDREN )
         self.UpdateUI = UpdateUI
         self.InitUI() # 绘制UI界面
         self.Center() #使对话框居中

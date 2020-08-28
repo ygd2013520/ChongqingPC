@@ -13,6 +13,7 @@ urlyubei = "https://cq.lianjia.com/xiaoqu/yubei/"       #渝北区小区url
 urljiulongpo = "https://cq.lianjia.com/xiaoqu/jiulongpo/"       #九龙坡区url
 urldadukou = "https://cq.lianjia.com/xiaoqu/dadukou/"     #大渡口区小区url
 urlshapingba = "https://cq.lianjia.com/xiaoqu/shapingba/"   #沙坪坝区小区url
+urlbeibei = "https://cq.lianjia.com/xiaoqu/beibei/"   #北碚区小区url
 
 from bs4 import BeautifulSoup
 from lxml import html
@@ -40,7 +41,7 @@ class LjClassPC(FatherClassPC):
         elif self.quyu == "沙坪坝":
             url = urlshapingba
         else:
-            url = ""
+            url = urlbeibei
         #根据区域获取小区ID和名称
         pagenum = 0
         try:
