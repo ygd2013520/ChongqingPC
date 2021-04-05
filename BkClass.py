@@ -93,7 +93,7 @@ class BkClassPC(FatherClassPC):
                             if int(totalSellCount) ==  0:
                                 continue
                             jj = k.find("div", {"class": "totalPrice"}).find("span").text.strip()
-                            if jj == "暂无":
+                            if self.is_number(jj) == False:
                                 continue
                             idname["id"] = k.get("data-id")			#小区ID
                             idname["name"] = k.find("img").get("alt")	#小区名字
