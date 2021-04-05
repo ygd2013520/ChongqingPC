@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 #父类
+import re
 import xlwt
 import datetime
 dictinfo = {"chajia":"差(面-总)","huxing":"户型","size":"大小(平米)","turn":"朝向","isjz":"是否精装","junjia":"均价(元)",\
@@ -61,3 +62,11 @@ class FatherClassPC():
                 j = j+1 #列号递增
             i = i+1 #行号递增
         book.save(filepath) #创建保存文件
+    #判断字符串是否为数字
+    def is_number(self,s):
+        pattern = re.compile('[0-9]+')
+        match = pattern.findall(s)
+        if match:
+            return True
+        else:
+            return False
