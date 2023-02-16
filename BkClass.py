@@ -171,7 +171,8 @@ class BkClassPC(FatherClassPC):
                         for m in l.find_all("div",class_="priceInfo"):
                             totalPrice = m.find("div", {"class": "totalPrice"}).find("span").text.strip()
                             unitPrice = m.find("div", {"class": "unitPrice"}).find("span").text.strip()
-                            unitPrice = unitPrice.split("单价")[1].split("元")[0]
+                            #unitPrice = unitPrice.split("单价")[1].split("元")[0]
+                            unitPrice = "".join(list(filter(str.isdigit, unitPrice)))
                             houseinfo["allprice"] = float(totalPrice)
                             houseinfo["danjia"] = float(unitPrice)
                             houseinfo["chajia"] = idname["junjia"] - houseinfo["danjia"]
@@ -226,7 +227,8 @@ class BkClassPC(FatherClassPC):
                                 for m in l.find_all("div",class_="priceInfo"):
                                     totalPrice = m.find("div", {"class": "totalPrice"}).find("span").text.strip()
                                     unitPrice = m.find("div", {"class": "unitPrice"}).find("span").text.strip()
-                                    unitPrice = unitPrice.split("单价")[1].split("元")[0]
+                                    #unitPrice = unitPrice.split("单价")[1].split("元")[0]
+                                    unitPrice = "".join(list(filter(str.isdigit, unitPrice)))
                                     houseinfo["allprice"] = float(totalPrice)
                                     houseinfo["danjia"] = float(unitPrice)
                                     houseinfo["chajia"] = idname["junjia"] - houseinfo["danjia"]
